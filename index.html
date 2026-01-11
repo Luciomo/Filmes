@@ -31,15 +31,20 @@
           <label for="search" class="visually-hidden">Pesquisar filmes</label>
           <input id="search" name="q" type="search" class="search-input" placeholder="Palavra-chave" />
           <button type="submit" class="search-button">Pesquisar</button>
+          <button type="button" id="show-favorites-btn" class="favorites-button">Meus Favoritos</button>
           <button type="button" class="clear-button">Limpar</button>
       </form> 
       </div>
 
+      <!-- Container para os cartões de filmes -->
       <div class="flexbox-container">
         <!-- Filmes serão inseridos aqui dinamicamente -->          
       </div>
     </main>
       <script>
+      // Variável de estado para controlar a exibição de favoritos
+      let showingOnlyFavorites = false;
+
       document.addEventListener('DOMContentLoaded', function() {
         const container = document.querySelector('.flexbox-container');
 
@@ -73,14 +78,15 @@
 
         if (!container) return;
 
-        // --- Helpers for favorites stored in localStorage ---
+        // Retorna a lista de filmes favoritos do localStorage
         function getFavoriteMovies() {
           return JSON.parse(localStorage.getItem('movies') || '[]');
         }
 
         function isFavorite(movie) {
           const favs = getFavoriteMovies();
-          // Match by ID first (TMDB movies), then by title (manually added)
+          
+          // Isso permite que filmes sem ID (adicionados manualmente) sejam verificados pelo título
           if (movie.id) {
             return favs.some(m => m.id === movie.id);
           }
@@ -88,10 +94,16 @@
         }
 
         function normalizeForStorage(movie) {
+          // Garante que o URL completo do pôster seja salvo para filmes da TMDB.
+          // Filmes adicionados manualmente já devem ter um URL completo em `movie.poster`.
+          let finalPosterUrl = movie.poster || null;
+          if (!finalPosterUrl && movie.poster_path) {
+            finalPosterUrl = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
+          }
           return {
             id: movie.id,
             title: movie.title,
-            poster: movie.poster || movie.poster_path || null
+            poster: finalPosterUrl
           };
         }
 
@@ -147,8 +159,8 @@
           if (favorited) favBtn.classList.add('favorited');
           favBtn.setAttribute('aria-pressed', favorited ? 'true' : 'false');
           favBtn.innerHTML = favorited
-            ? '<img src="img/Vector.svg" alt="" width="20"> Favorito'
-            : '<img src="img/Heart.svg" alt="" width="20"> Favoritar';
+            ? '<img src="img/Heart.svg" alt="" width="20"> Favorito'
+            : '<img src="img/Vector.svg" alt="" width="20"> Favoritar';
 
           favBtn.addEventListener('click', (ev) => {
             ev.stopPropagation(); // não propaga para o card
@@ -156,13 +168,13 @@
               removeFavorite(movie);
               favBtn.classList.remove('favorited');
               favBtn.setAttribute('aria-pressed', 'false');
-              favBtn.innerHTML = '<img src="img/Heart.svg" alt="" width="20"> Favoritar';
+              favBtn.innerHTML = '<img src="img/Vector.svg" alt="" width="20"> Favoritar';
               showToast('Removido dos favoritos', 'info');
             } else {
               addFavorite(movie);
               favBtn.classList.add('favorited');
               favBtn.setAttribute('aria-pressed', 'true');
-              favBtn.innerHTML = '<img src="img/Vector.svg" alt="" width="20"> Favorito';
+              favBtn.innerHTML = '<img src="img/Heart.svg" alt="" width="20"> Favorito';
               showToast('Adicionado aos favoritos', 'success');
             }
           });
@@ -324,10 +336,18 @@
           });
         })();
 
-        // Renderizar filmes salvos no localStorage
-        const localMovies = JSON.parse(localStorage.getItem('movies') || '[]');
-       localMovies.forEach((movie, index) => renderMovie(movie, { index }));
-
+        // Função auxiliar para redefinir a visualização de "somente favoritos"
+        function resetFavoritesView() {
+          if (showingOnlyFavorites) {
+            showingOnlyFavorites = false;
+            const btn = document.getElementById('show-favorites-btn');
+            if (btn) {
+              btn.classList.remove('active');
+              btn.textContent = 'Meus Favoritos';
+            }
+          }
+        }
+        
        // Buscar filmes populares via secure backend proxy
        async function getPopularMovies() {
           try {
@@ -409,6 +429,7 @@
         if (searchForm) {
           searchForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            resetFavoritesView();
             const q = (searchInput.value || '').trim();
             if (!q) {
               // Se campo vazio, recarregar filmes populares
@@ -432,15 +453,40 @@
           if (clearBtn) {
             clearBtn.addEventListener('click', async (e) => {
               e.preventDefault();
+              resetFavoritesView();
               searchInput.value = '';
               if (resultsInfo) resultsInfo.textContent = 'Campo limpo — carregando filmes populares...';
               const popular = await getPopularMovies();
               showMovies(popular, 'Filmes populares');
               searchInput.focus();
             });
-          }
+          }          
           // ----- Fim da busca de filmes -----
-          // favorites are handled by helper functions defined above (addFavorite/removeFavorite/getFavoriteMovies)
+
+          // ----- Lógica para mostrar/ocultar favoritos -----
+          const showFavoritesBtn = document.getElementById('show-favorites-btn');
+          if (showFavoritesBtn) {
+            showFavoritesBtn.addEventListener('click', () => {
+              showingOnlyFavorites = !showingOnlyFavorites;
+
+              if (showingOnlyFavorites) {
+                const favs = getFavoriteMovies();
+                const message = favs.length > 0 ? `Exibindo ${favs.length} filme(s) favorito(s)` : 'Você ainda não tem filmes favoritos.';
+                showMovies(favs, message);
+                showFavoritesBtn.textContent = 'Mostrar Todos';
+                showFavoritesBtn.classList.add('active');
+                searchInput.value = ''; // Limpa a busca
+              } else {
+                showFavoritesBtn.textContent = 'Meus Favoritos';
+                showFavoritesBtn.classList.remove('active');
+                if (resultsInfo) resultsInfo.textContent = 'Carregando filmes populares...';
+                getPopularMovies().then(movies => {
+                  showMovies(movies, 'Filmes populares');
+                });
+              }
+            });
+          }
+          // Favoritos são gerenciados pelas funções auxiliares definidas acima (addFavorite/removeFavorite/getFavoriteMovies)
         }
       });
       </script>
