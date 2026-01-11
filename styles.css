@@ -2,7 +2,7 @@
    Design Tokens
    ========================================================================== */
 :root {
-  /* 1. Colors */
+  /* 1. Cores */
   --color-primary: #d91818;
   --color-secondary: #791747;
   --color-accent: #e17203;
@@ -24,7 +24,7 @@
   --color-toast-success: #2e7d32;
   --color-toast-info: #555;
 
-  /* 2. Backgrounds */
+  /* 2. Plano de fundo */
   --bg-header: var(--color-primary);
   --bg-main-container: var(--color-secondary);
   --bg-card: #f2f2f2;
@@ -33,7 +33,7 @@
   --bg-toast: rgba(0, 0, 0, 0.85);
   --bg-input: #ffffff;
 
-  /* 3. Spacing */
+  /* 3. Espaçamento */
   --space-xs: 6px;
   --space-sm: 8px;
   --space-md: 12px;
@@ -41,12 +41,12 @@
   --space-xl: 20px;
   --space-xxl: 24px;
 
-  /* 4. Typography */
+  /* 4. Tipografia */
   --font-size-sm: 14px;
   --font-size-md: 16px;
   --font-size-lg: 20px;
 
-  /* 5. Borders & Radius */
+  /* 5. Bordas e Raio */
   --border-radius-sm: 6px;
   --border-radius-md: 8px;
   --border-input: 1px solid #ccc;
@@ -82,8 +82,13 @@ html[data-theme='dark'] {
     --color-favorite-bg: #4d1f3a;
     --color-favorite-border: #7c3f61;
     --color-favorite-text: #f7c5d0;
+    --color-toast-success: #81c784;
+    --color-toast-info: #bbb;
 
-    /* Redefine backgrounds and borders */
+    --bg-header: var(--color-primary);
+    
+
+    /* Redefinir plano de fundo e bordas */
     --bg-main-container: var(--color-secondary);
     --bg-card: #2c1d25;
     --bg-modal-content: var(--bg-card);
