@@ -49,8 +49,7 @@ Siga os passos abaixo para executar a aplicação localmente.
 
 ```bash
 # Clone o repositório (ou navegue até a pasta do projeto)
-cd "d:\Users\Lucio\Documentos\Alura - DevOps\Logica de programação - parte 2\Filmes"
-
+https://github.com/Luciomo/Filmes.git
 # Instale as dependências do Node.js
 npm install
 ```
