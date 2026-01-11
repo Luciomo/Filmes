@@ -1,0 +1,29 @@
+Proceeding to run the QA checklist: I'll test the search endpoint with valid and invalid queries and verify the popular-movies endpoint; next I'll add the 'Limpar' button to the UI and wire its handler.
+
+node server.js
+curl "http://localhost:3000/api/search-movies?query=batman&language=pt-BR&page=1"
+curl -i "http://localhost:3000/api/search-movies?query=batman&language=pt-BR&page=1"
+Invoke-RestMethod -Uri "http://localhost:3000/api/search-movies?query=batman&language=pt-BR&page=1" -Method Get | ConvertTo-Json -Depth 4
+netstat -ano | findstr :3000
+tasklist /FI "IMAGENAME eq node.exe"
+Start-Process -NoNewWindow -FilePath "node" -ArgumentList "server.js" -PassThru
+tasklist /FI "IMAGENAME eq node.exe"
+Invoke-RestMethod -Uri "http://localhost:3000/health" -Method Get | ConvertTo-Json -Depth 4
+Invoke-RestMethod -Uri "http://localhost:3000/api/search-movies?query=batman&language=pt-BR&page=1" -Method Get | Select-Object -Property results -First 1 | ConvertTo-Json -Depth 4
+try { $r = Invoke-WebRequest -Uri "http://localhost:3000/api/search-movies" -Method Get; Write-Output "Status:" $r.StatusCode } catch { Write-Output "Error status:" $_.Exception.Response.StatusCode.Value__ ; $b = $_.Exception.Response.GetResponseStream(); $reader = New-Object System.IO.StreamReader($b); $body = $reader.ReadToEnd(); Write-Output "Body:"; Write-Output $body }
+Invoke-RestMethod -Uri "http://localhost:3000/api/search-movies?query=an&include_adult=true" -Method Get | Select-Object -Property results -First 1 | ConvertTo-Json -Depth 2
+Invoke-RestMethod -Uri "http://localhost:3000/api/popular-movies?language=pt-BR&page=1" -Method Get | Select-Object -Property results -First 1 | ConvertTo-Json -Depth 2
+Edited
+index.html+1-0
+Edited
+index.html+1-1
+Edited
+index.html+13-0
+Perfect! QA completo e botão "Limpar" adicionado com sucesso.
+
+Resumo rápido das verificações (QA):
+
+✅ Busca com query (ex: "batman") retornou resultados e HTTP 200.
+✅ Busca com parâmetro include_adult=true é encaminhada corretamente.
+✅ Requisição sem query retorna HTTP 400 (comportamento esperado).
+✅ Endpoint /api/popular-movies continua funcionando.

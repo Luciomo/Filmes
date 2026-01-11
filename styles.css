@@ -1,0 +1,379 @@
+/* ==========================================================================
+   Design Tokens
+   ========================================================================== */
+:root {
+  /* 1. Colors */
+  --color-primary: #d91818;
+  --color-secondary: #791747;
+  --color-accent: #e17203;
+  --color-accent-hover: #c55a03;
+  
+  --color-text-light: #ffffff;
+  --color-text-dark: #000000;
+  --color-text-error: #ffdddd;
+
+  --color-focus-border: #6a0ddc;
+  --color-focus-glow: rgba(106, 13, 220, 0.12);
+  --color-focus-glow-light: rgba(255, 255, 255, 0.06);
+  --color-accent-focus-glow: rgba(197, 90, 3, 0.12);
+
+  --color-favorite-bg: #ffe6e9;
+  --color-favorite-border: #ff8a9e;
+  --color-favorite-text: #c62828;
+
+  --color-toast-success: #2e7d32;
+  --color-toast-info: #555;
+
+  /* 2. Backgrounds */
+  --bg-header: var(--color-primary);
+  --bg-main-container: var(--color-secondary);
+  --bg-card: #f2f2f2;
+  --bg-modal-overlay: rgba(0, 0, 0, 0.5);
+  --bg-modal-content: white;
+  --bg-toast: rgba(0, 0, 0, 0.85);
+  --bg-input: #ffffff;
+
+  /* 3. Spacing */
+  --space-xs: 6px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-xxl: 24px;
+
+  /* 4. Typography */
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+
+  /* 5. Borders & Radius */
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-input: 1px solid #ccc;
+  --border-fav-button: 1px solid #ddd;
+  --border-clear-button: 1px solid rgba(255, 255, 255, 0.18);
+
+  /* 6. Shadows & Transitions */
+  --shadow-card-hover: 0 4px 10px rgba(0, 0, 0, 0.08);
+  --shadow-button-hover: 0 3px 8px rgba(0, 0, 0, 0.08);
+  --shadow-modal: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --transition-fast: 120ms ease;
+  --transition-normal: 140ms ease;
+  --transition-slow: 220ms ease;
+}
+
+/* ==========================================================================
+   Dark Mode Theme
+   ========================================================================== */
+html {
+  color-scheme: light dark;
+}
+
+/* Aplica as variáveis do tema escuro quando o atributo data-theme é 'dark' */
+html[data-theme='dark'] {
+    --color-primary: #d14545;
+    --color-secondary: #1a0c13;
+    --color-text-dark: #e8e6e3;
+    --color-text-error: #ffb8b8;
+
+    --color-focus-border: #9d72de;
+    --color-focus-glow: rgba(157, 114, 222, 0.2);
+
+    --color-favorite-bg: #4d1f3a;
+    --color-favorite-border: #7c3f61;
+    --color-favorite-text: #f7c5d0;
+
+    /* Redefine backgrounds and borders */
+    --bg-main-container: var(--color-secondary);
+    --bg-card: #2c1d25;
+    --bg-modal-content: var(--bg-card);
+    --bg-input: #3a2f34;
+    --border-input: 1px solid #555;
+    --border-fav-button: 1px solid #555;
+}
+
+/* Estilos globais */
+.flexbox-container {
+    background-color: var(--bg-main-container);
+    color: var(--color-text-dark);
+    text-align: center;
+    margin: auto;
+    padding: var(--space-xxl);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: var(--space-xl);
+    justify-content: center;
+}
+
+/* Estilo do cabeçalho */
+.flexbox-header {
+    position: relative; /* Necessário para posicionar o botão de tema */
+    margin: 10px 0 var(--space-lg);
+    text-align: center;
+    background: var(--bg-header);
+    color: var(--color-text-light);
+    padding: var(--space-lg);
+    flex-direction: column;
+}
+
+@keyframes card-appear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fav-click-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* Estilos dos itens flexíveis */
+.flexbox-item {
+    background: var(--bg-card);
+    border: 2px transparent solid;
+    padding: var(--space-xl);
+    flex: 1 1 240px;
+    max-width: 300px;
+    min-width: 200px;
+    text-align: center;
+    font-size: var(--font-size-md);
+    color: var(--color-text-dark);
+    /* Transições para hover / focus */
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    will-change: transform, box-shadow;
+
+    /* Animação de entrada */
+    opacity: 0; /* Começa invisível */
+    animation: card-appear 400ms ease-out forwards;
+} 
+
+.flexbox-item h1 {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
+
+.flexbox-item h2 {
+    margin: 0 0 var(--space-sm);
+    font-size: var(--font-size-lg);
+    text-align: center;
+}
+
+.flexbox-item p {
+    margin: var(--space-sm) 0;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.flexbox-item img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: var(--space-sm) auto;
+}
+
+@media (max-width: 500px) {
+    .flexbox-container { padding: var(--space-md); gap: var(--space-md); }
+    .flexbox-item { flex-grow: 1; max-width: 100%; min-width: auto; }
+    .item1 h1 { font-size: var(--font-size-lg); }
+}
+
+/* Pequeno efeito visual para interação */
+.flexbox-item:focus-within,
+.flexbox-item:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+/* Estilos do formulário de busca */
+.search-form {
+    display: flex;
+    gap: var(--space-sm);
+    max-width: 600px;
+    margin: var(--space-md) auto 0;
+    align-items: center;
+}
+
+/* Estilos do campo de busca e botão */
+.search-input {
+    flex: 1 1 auto;
+    padding: 10px var(--space-md);
+    border: var(--border-input);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    color-scheme: dark light;
+    background-color: var(--bg-input);
+    color: var(--color-text-dark);
+}
+
+/* Efeito visual ao focar no campo de busca */
+.search-input:focus {
+    outline: 3px solid var(--color-focus-glow);
+    border-color: var(--color-focus-border);
+}
+
+/* Estilos do botão de busca */
+.search-button {
+    background: var(--color-accent);
+    color: var(--color-text-light);
+    border: none;
+    padding: 10px 14px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.search-button:focus {
+  outline: 3px solid var(--color-accent-focus-glow);
+  box-shadow: var(--shadow-button-hover);
+} 
+
+/* Efeito visual ao focar ou passar o mouse sobre o botão */
+.search-button:hover,
+.search-button:focus {
+    background: var(--color-accent-hover); /* ligeiramente mais escuro/acentuado */
+    box-shadow: var(--shadow-button-hover);
+}
+
+/* Botão limpar (secundário) */
+.clear-button {
+    background: transparent;
+    color: var(--color-text-light);
+    border: var(--border-clear-button);
+    padding: 10px 14px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.clear-button:hover,
+.clear-button:focus {
+    background: var(--color-focus-glow-light);
+    outline: 3px solid var(--color-focus-glow-light);
+}
+
+/* Mensagens de resultado e erro */
+#results-info { color: var(--color-text-light); margin-top: var(--space-sm); font-size: var(--font-size-sm); }
+#popular-error { color: var(--color-text-error); margin-top: var(--space-sm); font-weight: 700; }
+
+/* Estilizar título da página no cabeçalho */
+.page-title { color: var(--color-text-light); margin: 0; }
+
+/* Botão de Alternância de Tema */
+.theme-toggle {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-text-light);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+@media (max-width: 500px) {
+  .theme-toggle { top: var(--space-sm); right: var(--space-sm); }
+}
+
+/* Classe utilitária para esconder conteúdo visualmente mas manter acessível */
+.visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+
+/* Ajustes em telas pequenas: empilhar campo e botão */
+@media (max-width: 500px) {
+    .flexbox-container { padding: var(--space-md); gap: var(--space-md); }
+    .flexbox-item { flex-basis: 100%; max-width: 100%; min-width: auto; }
+    .item1 h1 { font-size: var(--font-size-lg); }
+    .search-form { flex-direction: column; gap: var(--space-xs); }
+    .search-button { width: 100%; }
+    .clear-button { width: 100%; }
+}
+
+/* Botão de favorito */
+.fav-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: transparent;
+    border: var(--border-fav-button);
+    padding: var(--space-xs) 10px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    color: var(--color-text-dark);
+    font-weight: 600;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 100ms ease;
+}
+
+/* Efeito de "pressionar" no botão */
+.fav-button:active {
+    transform: scale(0.96);
+}
+
+.fav-button img { display: inline-block; vertical-align: middle; }
+
+/* Animação no ícone ao clicar */
+.fav-button:active img {
+    animation: fav-click-pop 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fav-button.favorited {
+    background: var(--color-favorite-bg);
+    border-color: var(--color-favorite-border);
+    color: var(--color-favorite-text);
+}
+
+/* Cartões clicáveis */
+.flexbox-item { cursor: pointer; }
+
+
+/* Estilos do Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: var(--bg-modal-overlay); align-items: center; justify-content: center; z-index: 1000; padding: var(--space-xl); }
+.modal-overlay.open { display: flex; }
+.modal-content {
+    background: var(--bg-modal-content);
+    color: var(--color-text-dark);
+    padding: var(--space-xl);
+    border-radius: var(--border-radius-md);
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: var(--shadow-modal);
+    position: relative;
+}
+.modal-close { position: absolute; right: 18px; top: 10px; background: transparent; border: none; font-size: 24px; cursor: pointer; }
+.modal-body img { max-width: 100%; height: auto; margin-bottom: var(--space-sm); }
+
+/* Toasts */
+#toast-container { position: fixed; right: var(--space-xl); bottom: var(--space-xl); z-index: 1200; display: flex; flex-direction: column; gap: var(--space-sm); }
+.toast { background: var(--bg-toast); color: var(--color-text-light); padding: var(--space-sm) var(--space-md); border-radius: var(--border-radius-sm); min-width: 120px; transform: translateY(12px) scale(0.98); opacity: 0; transition: transform var(--transition-slow), opacity var(--transition-slow); }
+.toast.show { transform: translateY(0) scale(1); opacity: 1; }
+.toast-success { background: var(--color-toast-success); }
+.toast-info { background: var(--color-toast-info); }
+
+@media (max-width: 500px) {
+  .modal-content { padding: var(--space-md); }
+}
