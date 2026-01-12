@@ -54,9 +54,27 @@ https://github.com/Luciomo/Filmes.git
 npm install
 ```
 
-### 3. Configuração da Chave da API (Opcional)
+### 3. Configuração da Chave da API
 
-O projeto já inclui uma chave de exemplo para testes. Para usar a sua própria chave da API do TMDB, edite o arquivo `server.js`:
+Por padrão, o projeto utiliza uma chave de API de exemplo (`'sua_chave_aqui'`) que permite iniciar o servidor. No entanto, para que a busca de filmes e a exibição dos filmes populares funcionem, é **essencial** que você configure sua própria chave da API do TMDB.
+
+Você pode obter uma chave de API gratuita no [site do TMDB](https://www.themoviedb.org/signup).
+
+Após obter sua chave, você pode configurá-la de duas maneiras:
+
+**Método 1: Variável de Ambiente (Recomendado)**
+
+Crie um arquivo `.env` na raiz do projeto e adicione a seguinte linha:
+
+```
+TMDB_API_KEY=sua_chave_aqui
+```
+
+O servidor irá carregar a variável automaticamente.
+
+**Método 2: Edição do Código-fonte**
+
+Você pode editar diretamente o arquivo `server.js` e substituir `'sua_chave_aqui'` pela sua chave:
 
 ```javascript
 // Em server.js

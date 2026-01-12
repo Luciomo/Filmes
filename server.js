@@ -13,6 +13,11 @@ const PORT = process.env.PORT || 3000;
 // Loja segura da chave API TMDB no backend
 const TMDB_API_KEY = process.env.TMDB_API_KEY || 'c8f1288f31b0528d81ce31a921592fd9';
 
+if (!TMDB_API_KEY) {
+  console.error('FATAL ERROR: TMDB_API_KEY environment variable is not set.');
+  process.exit(1);
+}
+
 // Configurar CORS: em produção, limitar origens; em desenvolvimento permitir todas para facilitar testes
 if (process.env.NODE_ENV === 'production') {
   app.use(cors({
