@@ -1,13 +1,15 @@
 {
   "version": 2,
   "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/server.js" },
-    { "src": "/img/(.*)", "headers": {"cache-control": "s-maxage=31536000"}, "dest": "/img/$1" },
-    { "src": "/styles.css", "headers": {"cache-control": "s-maxage=31536000"}, "dest": "/styles.css" },
-    { "src": "/app.js", "headers": {"cache-control": "s-maxage=31536000"}, "dest": "/app.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
   ]
 }
