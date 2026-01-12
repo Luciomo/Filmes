@@ -21,7 +21,7 @@ if (!TMDB_API_KEY) {
 // Configurar CORS: em produção, limitar origens; em desenvolvimento permitir todas para facilitar testes
 if (process.env.NODE_ENV === 'production') {
   app.use(cors({
-    origin: ['http://seu-dominio.com', 'https://seu-dominio.com','http://luciomo.github.io' ,'https://luciomo.github.io'],
+    origin: ['http://seu-dominio.com', 'https://seu-dominio.com','http://luciomo.github.io/Filmes' ,'https://luciomo.github.io/Filmes'],
     methods: ['GET', 'POST'],
     credentials: true
   }));
