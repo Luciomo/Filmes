@@ -112,9 +112,3 @@ if (!process.env.IS_SERVERLESS) {
 
 // Para deploy serverless, exporte a aplicação como um handler
 module.exports.handler = serverless(app);
-
-app.listen(PORT, () => {
-  console.log(`🎬 TMDB Proxy Server running on http://localhost:${PORT}`);
-  console.log(`📁 Serving static files from current directory`);
-  console.log(`🔐 API Key stored securely on backend`);
-});

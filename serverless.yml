@@ -8,6 +8,16 @@ provider:
   region: us-east-1 # Você pode alterar para sua região de preferência
   environment:
     TMDB_API_KEY: ${env:TMDB_API_KEY} # Carrega a chave da variável de ambiente
+  # Adicionar permissões IAM para CloudWatch Logs
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+          Resource: "arn:aws:logs:${aws:region}:${aws:accountId}:log-group:/aws/lambda/*:*"
 
 functions:
   api:
