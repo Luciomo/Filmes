@@ -6,32 +6,36 @@
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
+const serverless = require('serverless-http'); // Importar serverless-http
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Loja segura da chave API TMDB no backend
-const TMDB_API_KEY = process.env.TMDB_API_KEY || 'c8f1288f31b0528d81ce31a921592fd9';
+const TMDB_API_KEY = process.env.TMDB_API_KEY; // Remover fallback hardcoded para produção
 
 if (!TMDB_API_KEY) {
   console.error('FATAL ERROR: TMDB_API_KEY environment variable is not set.');
-  process.exit(1);
+  // Em ambiente serverless, não é possível fazer exit, então logamos e deixamos a requisição falhar.
+  // Em desenvolvimento local, podemos sair.
+  if (!process.env.IS_SERVERLESS) {
+    process.exit(1);
+  }
 }
 
 // Configurar CORS: em produção, limitar origens; em desenvolvimento permitir todas para facilitar testes
-if (process.env.NODE_ENV === 'production') {
-  app.use(cors({
-    origin: ['http://seu-dominio.com', 'https://seu-dominio.com'], // substituir pelos domínios permitidos
-    methods: ['GET', 'POST'],
-    credentials: true
-  }));
-} else {
-  // Desenvolvimento: permitir todas as origens para evitar problemas de CORS durante testes locais
-  app.use(cors());
-} 
+// Para serverless, o CORS pode ser configurado no API Gateway ou aqui, mas é bom ter uma camada de segurança.
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' ? ['https://seu-dominio.com'] : '*', // Ajustar para seus domínios
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true
+}));
 
-// Arquivo estático (HTML, CSS, JS)
-app.use(express.static('./'));
+// Servir arquivos estáticos apenas no ambiente de desenvolvimento local, não no Lambda.
+// No Lambda, o frontend será servido separadamente (ex: S3 + CloudFront ou Vercel/Netlify).
+if (!process.env.IS_SERVERLESS) {
+  app.use(express.static('./'));
+}
 
 // Proxy para buscar filmes populares da TMDB
 app.get('/api/popular-movies', async (req, res) => {
@@ -98,6 +102,16 @@ app.get('/api/search-movies', async (req, res) => {
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Proxy server is running' });
 });
+
+// Para desenvolvimento local, inicie o servidor express
+if (!process.env.IS_SERVERLESS) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+// Para deploy serverless, exporte a aplicação como um handler
+module.exports.handler = serverless(app);
 
 app.listen(PORT, () => {
   console.log(`🎬 TMDB Proxy Server running on http://localhost:${PORT}`);

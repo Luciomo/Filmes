@@ -1,0 +1,33 @@
+service: filmes-favoritos-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x # Corresponde ao "engines" no package.json
+  region: us-east-1 # Você pode alterar para sua região de preferência
+  environment:
+    TMDB_API_KEY: ${env:TMDB_API_KEY} # Carrega a chave da variável de ambiente
+
+functions:
+  api:
+    handler: server.handler # Aponta para o handler exportado no server.js
+    events:
+      - httpApi:
+          path: /
+          method: '*'
+      - httpApi:
+          path: /{proxy+}
+          method: '*'
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!.git/**'
+    - '!.github/**'
+    - '!.env.example'
+    - '!.serverless/**'
+    - 'github_pages_deployment.md'
+    - 'SETUP.md'
+    - 'teste de QA.txt'
+    - 'vercel.json'

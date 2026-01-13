@@ -53,8 +53,6 @@ Este projeto usa um servidor Node.js como proxy para proteger a chave da API TMD
 
 - `server.js` → Servidor proxy Node.js
 - `index.html` → Frontend (sem chave exposta)
-- `adicionar.html` → Página de adicionar filmes
-- `adicionar.js` → Lógica de formulário
 - `styles.css` → Estilos
 
 ## 🧪 Teste a Conexão
